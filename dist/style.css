@@ -11,3 +11,6 @@ dialog{position:fixed;inset:0 0 0 auto;margin:0;width:min(660px,100%);max-width:
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
 @media(max-width:800px){.intro-bottom{max-width:45%;font-size:.5rem}.player-state{display:none}}
+
+.radio-stations{display:flex;gap:12px;margin:28px 0}.radio-stations button{flex:1;display:flex;flex-direction:column;gap:8px;font-size:1rem}.radio-stations button[aria-pressed=true]{border-color:var(--acid);background:#dcf78215;color:var(--acid)}.radio-stations small{font-size:.75rem;color:#b8c2bf}.audio-slider{margin:30px 0}.audio-slider label{display:flex;justify-content:space-between;font-size:1rem;gap:20px}.audio-slider output{color:var(--acid);min-width:3ch}.audio-slider input{width:100%;margin:18px 0;accent-color:var(--acid);height:24px}.utility #radio-button{padding:0 13px}.playing .utility{z-index:15}
+@media(max-width:800px){.mobile-controls #vehicle-button{position:absolute;right:25px;bottom:345px;width:54px;height:54px;border:1px solid #e4eec777;border-radius:50%;background:#1b2c31b0;color:var(--acid);font-size:.65rem}.intro:not([hidden])~.utility{bottom:58px}.intro-bottom{max-width:90%}.utility{gap:7px}.interaction{bottom:275px;left:42%;max-width:68%}.toast{bottom:208px}.desktop-help{gap:12px}}

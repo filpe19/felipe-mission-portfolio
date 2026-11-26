@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check dist/game.js && node --check dist/drive.js && node --check dist/gta-world.js && node --check dist/portfolio.js",
+    "check": "node --check dist/game.js && node --check dist/drive.js && node --check dist/gta-world.js && node --check dist/portfolio.js && node --check dist/character.js && node --check dist/audio.js",
     "preview": "python3 -m http.server 8876 --bind 127.0.0.1 --directory dist"
   }
 }

@@ -85,14 +85,14 @@ export async function loadGTA(scene, onProgress) {
     for(const h of hits){const n=h.face.normal.clone().transformDirection(h.object.matrixWorld);if(n.y>.48)return h.point.y;}
     return null;
   }
-  function blocked(x,z,nextX,nextZ,ground,heading){
+  function blocked(x,z,nextX,nextZ,ground,heading,radius=.8,reach=2.25){
     const dx=nextX-x,dz=nextZ-z,distance=Math.hypot(dx,dz);
     if(!distance)return false;
     if(nextX< -215||nextX>145||nextZ< -185||nextZ>155)return true;
     const dir=new THREE.Vector3(dx/distance,0,dz/distance),side=new THREE.Vector3(-dir.z,0,dir.x);
     const candidatesSet=new Set();for(const [xx,zz] of [[x,z],[nextX,nextZ],[nextX+side.x*1.4,nextZ+side.z*1.4],[nextX-side.x*1.4,nextZ-side.z*1.4]])for(const m of candidates(xx,zz))candidatesSet.add(m);
-    for(const offset of [-.8,0,.8]){
-      ray.set(new THREE.Vector3(x+side.x*offset,ground+.7,z+side.z*offset),dir);ray.far=distance+2.25;
+    for(const offset of [-radius,0,radius]){
+      ray.set(new THREE.Vector3(x+side.x*offset,ground+.7,z+side.z*offset),dir);ray.far=distance+reach;
       const hits=ray.intersectObjects([...candidatesSet],false);
       if(hits.some(h=>Math.abs(h.face.normal.clone().transformDirection(h.object.matrixWorld).y)<.5))return true;
     }

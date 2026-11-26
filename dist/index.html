@@ -10,7 +10,7 @@
 </head>
 <body>
   <main id="experience">
-    <canvas id="world" aria-label="Cidade interativa do portfólio de Felipe Souza. Use WASD ou as setas para dirigir e E para interagir." tabindex="0"></canvas>
+    <canvas id="world" aria-label="Cidade interativa do portfólio de Felipe Souza. Use WASD para andar ou dirigir, F para entrar no carro e E para interagir." tabindex="0"></canvas>
     <div class="vignette" aria-hidden="true"></div>
     <header class="topbar">
       <a class="brand" href="#" id="home-link" aria-label="Felipe Souza, início"><span class="monogram">fs<span>.</span></span><span class="brand-copy">FELIPE SOUZA<small>FULL STACK ENGINEER</small></span></a>
@@ -20,9 +20,9 @@
       <div class="intro-copy">
         <p class="eyebrow"><span></span> LOS SANTOS · GROVE STREET</p>
         <h1 id="intro-title">UMA CIDADE.<br>TRÊS MISSÕES.<br><em>MEU PORTFÓLIO.</em></h1>
-        <p class="intro-description">Todo projeto tem uma história.<br>Pegue o Infernus na Grove Street e descubra os projetos que eu levei do código à produção.</p>
+        <p class="intro-description">Todo projeto tem uma história.<br>Explore com CJ, entre no Infernus e descubra os projetos que eu levei do código à produção.</p>
         <div class="intro-actions"><button class="primary" id="start-button"><span class="play-icon" aria-hidden="true"></span>Iniciar missão</button><button class="text-button" id="skip-button">Ver projetos direto</button></div>
-        <div class="intro-controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> mover</span><span><kbd>E</kbd> interagir</span><span><kbd>Espaço</kbd> frear</span></div>
+        <div class="intro-controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> mover</span><span><kbd>E</kbd> interagir</span><span><kbd>F</kbd> carro</span></div>
       </div>
       <div class="postcard" aria-hidden="true"><span class="postcard-line"></span><p>O SEU PRÓXIMO<br>DESENVOLVEDOR<br><strong>ESTÁ NO MAPA.</strong></p><span class="postcard-coordinates">GROVE STREET, HOME.</span></div>
       <div class="intro-bottom"><span>SOFTWARE REAL. UMA NOVA FORMA DE CONHECER.</span><span>EXPERIÊNCIA INTERATIVA / 2026</span></div>
@@ -32,13 +32,13 @@
       <div class="world-status"><span class="time-icon">◒</span><span id="world-time">17:42</span><span class="world-weather">FIM DE TARDE EM LOS SANTOS</span></div>
       <div class="player-state"><span id="vehicle-label">A PÉ</span><strong id="speed">0<small>KM/H</small></strong></div>
       <div class="radar-block"><div class="radar-heading"><span id="district-name">GROVE STREET</span><button id="map-button" aria-label="Abrir mapa">M</button></div><canvas id="radar" width="240" height="190" aria-label="Minimapa com sua posição e as três missões"></canvas><div class="radar-legend"><span class="legend-player"></span>VOCÊ<span class="legend-target"></span>MISSÃO</div></div>
-      <div class="desktop-help"><span><kbd>WASD</kbd> Mover</span><span><kbd>E</kbd> Missão</span><span><kbd>C</kbd> Câmera</span><button id="reset-button">Recomeçar rota</button></div>
+      <div class="desktop-help"><span><kbd>WASD</kbd> Mover</span><span><kbd>E</kbd> Missão</span><span><kbd>F</kbd> Carro</span><span><kbd>Shift</kbd> Correr</span><span><kbd>C</kbd> Câmera</span><button id="reset-button">Recomeçar rota</button></div>
       <button id="interaction" class="interaction" hidden><kbd>E</kbd><span>Conhecer projeto</span></button>
-      <div class="mobile-controls"><div id="joystick" aria-label="Controle de movimento" role="group"><span id="joystick-knob"></span></div><button id="touch-action" aria-label="Interagir">E</button><button id="touch-run" aria-label="Frear">FREAR</button></div>
+      <div class="mobile-controls"><div id="joystick" aria-label="Controle de movimento" role="group"><span id="joystick-knob"></span></div><button id="vehicle-button" aria-label="Entrar no carro">CARRO</button><button id="touch-action" aria-label="Interagir">E</button><button id="touch-run" aria-label="Frear">FREAR</button></div>
     </section>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="completion" class="completion" hidden><p>MISSÃO CUMPRIDA</p><h2>Seu próximo projeto<br>começa com uma conversa.</h2><button class="primary" id="completion-contact">Chamar o Felipe</button><button class="text-button" id="keep-exploring">Continuar explorando</button></div>
-    <div class="utility"><button id="sound-button" aria-label="Ativar som" aria-pressed="false"><span id="sound-icon">♪</span><span id="sound-label">SOM OFF</span></button><button id="help-button" aria-label="Como jogar">?</button></div>
+    <div class="utility"><button id="sound-button" aria-label="Ativar som" aria-pressed="false"><span id="sound-icon">♪</span><span id="sound-label">SOM OFF</span></button><button id="radio-button" aria-label="Rádio e volumes">♫ RÁDIO</button><button id="help-button" aria-label="Como jogar">?</button></div>
     <div id="loading" class="loading"><span class="loading-mark">fs.</span><p>Carregando Grove Street<span class="loading-dots">...</span></p></div>
     <div id="fallback" class="fallback" hidden><h2>Vamos direto aos projetos.</h2><p>O modo 3D não está disponível neste navegador. Seu tour pelo portfólio continua aqui.</p><button class="primary" id="fallback-projects">Explorar projetos</button></div>
   </main>

@@ -1,0 +1,56 @@
+{
+  "engine-accel.wav": {
+    "sampleRate": 18000,
+    "duration": 3.5233333333333334,
+    "loopStart": 0.0,
+    "headroom": 1
+  },
+  "engine-cruise.wav": {
+    "sampleRate": 17924,
+    "duration": 0.5107676857844231,
+    "loopStart": 0.15618723499218926,
+    "headroom": 0
+  },
+  "engine-decel.wav": {
+    "sampleRate": 18000,
+    "duration": 1.0912222222222223,
+    "loopStart": 0.0,
+    "headroom": 0
+  },
+  "engine-idle-0.wav": {
+    "sampleRate": 17924,
+    "duration": 0.19839321580004463,
+    "loopStart": 0.0,
+    "headroom": 0
+  },
+  "engine-idle-1.wav": {
+    "sampleRate": 18000,
+    "duration": 0.5848888888888889,
+    "loopStart": 0.0,
+    "headroom": 100
+  },
+  "step-0.wav": {
+    "sampleRate": 16000,
+    "duration": 0.527625,
+    "loopStart": 0.0,
+    "headroom": -125
+  },
+  "step-1.wav": {
+    "sampleRate": 17000,
+    "duration": 0.1676470588235294,
+    "loopStart": 0.0,
+    "headroom": 83
+  },
+  "step-2.wav": {
+    "sampleRate": 17000,
+    "duration": 0.1885294117647059,
+    "loopStart": 0.0,
+    "headroom": 603
+  },
+  "step-3.wav": {
+    "sampleRate": 17000,
+    "duration": 0.19705882352941176,
+    "loopStart": 0.0,
+    "headroom": 844
+  }
+}
