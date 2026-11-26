@@ -1,35 +1,45 @@
-// Original instrumental radio patterns plus engine/footstep samples from the owner's GTA copy.
+// User-supplied MP3, original instrumental stations, and GTA engine/footstep samples.
 const ROOT='./assets/audio/';
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const frequency=n=>440*2**((n-69)/12);
 export class GameAudio {
   constructor(){
     this.settings={enabled:true,effects:.7,music:.42,station:0};
-    try{Object.assign(this.settings,JSON.parse(localStorage.getItem('felipe-audio-v2')||'{}'));}catch{}
-    this.settings.effects=clamp(Number(this.settings.effects)||0,0,1);this.settings.music=clamp(Number(this.settings.music)||0,0,1);this.settings.station=clamp(Number(this.settings.station)||0,0,1);
-    this.stations=[{name:'Grove FM',track:'Homecoming · instrumental original',bpm:92,roots:[43,43,39,41],lead:[74,77,79,77,74,72,70,72]},{name:'Night Drive',track:'City Lights · instrumental original',bpm:104,roots:[40,36,43,38],lead:[76,79,83,79,74,71,74,78]}];
+    try{const saved=localStorage.getItem('felipe-audio-v3');Object.assign(this.settings,JSON.parse(saved||localStorage.getItem('felipe-audio-v2')||'{}'));if(!saved)this.settings.station=0;}catch{}
+    this.settings.effects=clamp(Number(this.settings.effects)||0,0,1);this.settings.music=clamp(Number(this.settings.music)||0,0,1);this.settings.station=clamp(Math.round(Number(this.settings.station)||0),0,2);
+    this.stations=[{name:'Equipe Absoluta',track:'Banda Msynck',file:ROOT+'equipe-absoluta-banda-msynck.mp3'},{name:'Grove FM',track:'Homecoming · instrumental original',bpm:92,roots:[43,43,39,41],lead:[74,77,79,77,74,72,70,72]},{name:'Night Drive',track:'City Lights · instrumental original',bpm:104,roots:[40,36,43,38],lead:[76,79,83,79,74,71,74,78]}];
     this.buffers={};this.loading=null;this.playing=false;this.frame={active:false,inCar:false,speed:0,throttle:0};this.lastStep=0;
   }
-  save(){try{localStorage.setItem('felipe-audio-v2',JSON.stringify(this.settings));}catch{}}
+  save(){try{localStorage.setItem('felipe-audio-v3',JSON.stringify(this.settings));}catch{}}
   async start(){
     if(!this.context){
       this.context=new (window.AudioContext||window.webkitAudioContext)();const c=this.context;
       this.master=c.createGain();this.effects=c.createGain();this.music=c.createGain();this.analyser=c.createAnalyser();this.analyser.fftSize=1024;
       const limiter=c.createDynamicsCompressor();limiter.threshold.value=-12;limiter.knee.value=10;limiter.ratio.value=5;
       this.effects.connect(this.master);this.music.connect(this.master);this.master.connect(limiter);limiter.connect(this.analyser);this.analyser.connect(c.destination);
+      this.track=new Audio();this.track.loop=true;this.track.preload='metadata';
+      this.trackGain=c.createGain();this.trackGain.gain.value=.55;
+      this.trackSource=c.createMediaElementSource(this.track);this.trackSource.connect(this.trackGain);this.trackGain.connect(this.music);
+      this.track.addEventListener('error',()=>window.dispatchEvent(new CustomEvent('portfolio-audio-error')));
       const noise=c.createBuffer(1,c.sampleRate,c.sampleRate),samples=noise.getChannelData(0);for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;this.noise=noise;
       this.apply();this.nextBeat=c.currentTime+.15;this.beat=0;
       this.timer=setInterval(()=>this.schedule(),50);
       this.loading=Promise.all(['engine-idle-0.wav','engine-cruise.wav','engine-accel.wav','engine-decel.wav','step-1.wav','step-2.wav','step-3.wav'].map(async name=>{const r=await fetch(ROOT+name);if(!r.ok)throw new Error(name);this.buffers[name]=await c.decodeAudioData(await r.arrayBuffer());})).then(()=>this.engineLoops());
       this.loading.catch(()=>{this.loadFailed=true;});
-      document.addEventListener('visibilitychange',()=>{if(document.hidden){this.context.suspend().catch(()=>{});}else if(this.playing){this.context.resume().catch(()=>{});this.nextBeat=this.context.currentTime+.1;}});
+      document.addEventListener('visibilitychange',()=>{if(document.hidden){this.track.pause();this.context.suspend().catch(()=>{});}else if(this.playing){this.context.resume().catch(()=>{});this.nextBeat=this.context.currentTime+.1;this.syncTrack();}});
     }
-    this.playing=true;await this.context.resume();this.apply();return this.loading;
+    this.playing=true;const resumed=this.context.resume();this.syncTrack();await resumed;this.apply();return this.loading;
+  }
+  syncTrack(){
+    if(!this.track)return;const station=this.stations[this.settings.station];
+    if(!station.file||!this.settings.enabled||!this.playing||document.hidden){this.track.pause();return;}
+    const url=new URL(station.file,document.baseURI).href;if(this.track.src!==url)this.track.src=url;
+    this.track.play().catch(error=>{if(error.name!=='AbortError')window.dispatchEvent(new CustomEvent('portfolio-audio-error'));});
   }
   apply(){if(!this.context)return;const t=this.context.currentTime;this.master.gain.setTargetAtTime(this.settings.enabled?.8:0,t,.05);this.effects.gain.setTargetAtTime(this.settings.effects,t,.08);this.music.gain.setTargetAtTime(this.settings.music*(this.frame.active?1:.35),t,.12);}
-  toggle(){this.settings.enabled=!this.settings.enabled;this.save();this.apply();return this.settings.enabled;}
+  toggle(){this.settings.enabled=!this.settings.enabled;this.save();this.apply();this.syncTrack();return this.settings.enabled;}
   setVolume(type,value){this.settings[type]=clamp(value,0,1);this.save();this.apply();}
-  setStation(index){this.settings.station=index%this.stations.length;this.beat=0;if(this.context)this.nextBeat=this.context.currentTime+.12;this.save();}
+  setStation(index){this.settings.station=clamp(Math.round(index),0,this.stations.length-1);this.beat=0;if(this.context)this.nextBeat=this.context.currentTime+.12;this.save();this.syncTrack();}
   engineLoops(){
     const c=this.context;
     for(const [key,file] of [['idle','engine-idle-0.wav'],['cruise','engine-cruise.wav']]){
@@ -71,7 +81,7 @@ export class GameAudio {
   }
   schedule(){
     if(!this.context||this.context.state!=='running'||!this.playing)return;
-    const c=this.context,station=this.stations[this.settings.station],step=60/station.bpm/4;
+    const c=this.context,station=this.stations[this.settings.station];if(station.file){this.nextBeat=c.currentTime+.12;return;}const step=60/station.bpm/4;
     if(this.nextBeat<c.currentTime)this.nextBeat=c.currentTime+.06;
     while(this.nextBeat<c.currentTime+.3){
       const beat=this.beat%16,bar=Math.floor(this.beat/16)%8,root=station.roots[Math.floor(bar/2)],swing=beat%2?step*.14:0,t=this.nextBeat+swing;
@@ -81,7 +91,7 @@ export class GameAudio {
         if(beat%2===0)this.percussion(t,beat%4===0?.09:.06,'hat');
         if([0,3,6,8,11,14].includes(beat))this.note(root+(beat===11?7:beat===14?12:0),t,step*(beat===0?2.8:1.7),.18,'triangle');
         if(beat===0||beat===10)for(const interval of [12,15,19,22])this.note(root+interval,t,step*3,.026,'triangle');
-        if(bar%2===1&&[2,5,8,11,14].includes(beat))this.note(station.lead[(Math.floor(beat/2)+bar)%8],t,step*1.5,.035,this.settings.station?'triangle':'sine');
+        if(bar%2===1&&[2,5,8,11,14].includes(beat))this.note(station.lead[(Math.floor(beat/2)+bar)%8],t,step*1.5,.035,this.settings.station===2?'triangle':'sine');
       }
       this.beat++;this.nextBeat+=step;
     }

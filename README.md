@@ -37,3 +37,7 @@ A instalação original do jogo não faz parte do repositório. Para reconverter
 ## Verificação da atualização de personagem e áudio
 
 Conferidos em Chromium isolado: CJ parado e correndo, entrada/saída do carro, condução até a primeira missão, avanço de progresso, mapa, telas de projeto, layout de celular, troca de estação, volumes e silêncio geral. O analisador de áudio confirmou sinal de música e de motor separadamente, com a rádio desligada no teste do motor. A sintaxe de todos os módulos é validada com `npm run check`.
+
+## Música enviada pelo proprietário
+
+A estação padrão toca **Equipe Absoluta — Banda Msynck**, a partir do MP3 fornecido por Felipe. A faixa tem aproximadamente 2 min 49 s, toca em loop e usa o volume de música do mixer, separado do motor. O arquivo original é servido por HTMLAudioElement, sem decodificar a faixa inteira em memória. As estações instrumentais permanecem disponíveis. A publicação continua privada. O início depende do clique em Iniciar missão; silenciar ou ocultar a aba pausa a faixa.
