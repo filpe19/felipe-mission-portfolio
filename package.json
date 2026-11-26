@@ -1,0 +1,10 @@
+{
+  "name": "felipe-mission-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check dist/game.js && node --check dist/drive.js && node --check dist/gta-world.js && node --check dist/portfolio.js",
+    "preview": "python3 -m http.server 8876 --bind 127.0.0.1 --directory dist"
+  }
+}

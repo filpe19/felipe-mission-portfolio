@@ -1,0 +1,9 @@
+.qa/
+tools/unused-textures/
+tools/*.zip
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+*.tar.gz
+.sites-runtime/
